@@ -1,5 +1,5 @@
 export default interface Config{
     title?: String;
     subtitle?: String;
-    value: Number;
+    value: String;
 }

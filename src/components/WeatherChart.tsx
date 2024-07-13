@@ -1,17 +1,18 @@
 import { Chart } from "react-google-charts";
-import Paper from '@mui/material/Paper';
+import Config from "../interfaces/Config";
 
-export default function WeatherChart() {
+export default function WeatherChart(info: Config) {
 
-    {/* Configuración */}
+    {/* Configuración */ }
+
+    let nombre = info.value?.toString()
 
     let options = {
-        title: "Precipitación, Humedad y Nubosidad vs Hora",
         curveType: "function",
-        legend: { position: "right" },
+        legend: { position: "bottom" },
     }
 
-    {/* Datos de las variables meteorológicas */}
+    {/* Datos de las variables meteorológicas */ }
 
     const data = [
         ["Hora", "Precipitación", "Humedad", "Nubosidad"],
@@ -24,23 +25,37 @@ export default function WeatherChart() {
         ["21:00", 5, 77, 99]
     ];
 
-    {/* JSX */}
+    const variableMap: { [key: string]: number } = {
+        "Todas": 0,
+        "Precipitación": 1,
+        "Humedad": 2,
+        "Nubosidad": 3
+    };
+
+    const variableIndex = variableMap[nombre ?? ""] ?? 0;
+
+    let datosFiltrados;
+
+    if (variableIndex != 0) {
+        datosFiltrados = data.map((row, index) => {
+            if (index === 0) return [row[0], row[variableIndex]];
+            return [row[0], row[variableIndex]];
+        });
+    } else {
+        datosFiltrados = data
+    }
+
+    {/* JSX */ }
 
     return (
-        <Paper
-            sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column'
-            }}
-        >
+        <>
             <Chart
                 chartType="LineChart"
-                data={data}
                 width="100%"
-                height="400px"
+                height="100%"
+                data={datosFiltrados}
                 options={options}
-        />
-        </Paper>
+            />
+        </>
     )
 }	

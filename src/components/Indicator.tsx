@@ -1,16 +1,9 @@
 import Config from "../interfaces/Config"
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
 
 export default function Indicator(config: Config) {
     return (
-        <Paper
-            sx={{
-                p: 5,
-                display: 'flex',
-                flexDirection: 'column'
-            }}
-        >
+        <>
             <Typography component="h2" variant="h6" color="primary" gutterBottom>
                 {config.title}
             </Typography>
@@ -20,6 +13,6 @@ export default function Indicator(config: Config) {
             <Typography color="text.secondary" sx={{ flex: 1 }}>
                 {config.subtitle}
             </Typography>
-        </Paper>
+        </>
     )
 }
