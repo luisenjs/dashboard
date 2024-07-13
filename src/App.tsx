@@ -63,7 +63,7 @@ function App() {
 				en el arreglo de resultados
 			*/}
 
-			let ciudad = xml.getElementsByTagName("name")
+			//let ciudad = xml.getElementsByTagName("name")
 
 			let temperatura = xml.getElementsByTagName("temperature")[0]
 			let temperaturaAhora = (parseFloat(temperatura.getAttribute("value") ?? "") - 273.15).toFixed(1)
@@ -109,7 +109,7 @@ function App() {
 				let hora = fromTime[1].split(":").slice(0, 2).join(":")
 				let rangeHours = día + " - " + hora
 
-				let visibilidad = timeElement.getElementsByTagName("visibility")[0].getAttribute("value")
+				let visibilidad = timeElement.getElementsByTagName("visibility")[0].getAttribute("value") ?? ""
 
 				let windDirection = timeElement.getElementsByTagName("windDirection")[0].getAttribute("deg") + "° " + timeElement.getElementsByTagName("windDirection")[0].getAttribute("code")
 
