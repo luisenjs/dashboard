@@ -1,5 +1,9 @@
 import { Chart } from "react-google-charts";
-import Config from "../interfaces/Config";
+
+interface Config {
+    value: String;
+    variables: [];
+  }
 
 export default function WeatherChart(info: Config) {
 
@@ -14,22 +18,20 @@ export default function WeatherChart(info: Config) {
 
     {/* Datos de las variables meteorológicas */ }
 
-    const data = [
-        ["Hora", "Precipitación", "Humedad", "Nubosidad"],
-        ["03:00", 13, 78, 75],
-        ["06:00", 4, 81, 79],
-        ["09:00", 7, 82, 69],
-        ["12:00", 3, 73, 62],
-        ["15:00", 4, 66, 75],
-        ["18:00", 6, 64, 84],
-        ["21:00", 5, 77, 99]
+    let data = [
+        ["Hora", "Temperatura", "Sensación Térmica", "Humedad"]
     ];
+    
+    info.variables.forEach((datos) => {
+        let lista = [datos["horas"], parseFloat(datos["temperatura"]), parseFloat(datos["sensación"]), parseInt(datos["humedad"])]
+        data.push(lista)
+    })
 
     const variableMap: { [key: string]: number } = {
         "Todas": 0,
-        "Precipitación": 1,
-        "Humedad": 2,
-        "Nubosidad": 3
+        "Temperatura": 1,
+        "Sensación Térmica": 2,
+        "Humedad": 3
     };
 
     const variableIndex = variableMap[nombre ?? ""] ?? 0;

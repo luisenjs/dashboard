@@ -15,9 +15,9 @@ export default function ControlPanel({ valoresperado }: any) {
 
     let items = [
         "Todas",
-        "Precipitación",
-        "Humedad",
-        "Nubosidad"
+        "Temperatura",
+        "Sensación Térmica",
+        "Humedad"
     ]
 
     let options = items.map((item, key) => <MenuItem key={key} value={key}>{item}</MenuItem>)

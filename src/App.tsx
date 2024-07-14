@@ -21,6 +21,7 @@ function App() {
 	{/* Variable de estado y función de actualización */ }
 	let [rowsTable, setRowsTable] = useState<Row[]>([])
 	let [indicators, setIndicators] = useState<ReactNode[]>([])
+	let [variables, setVariables] = useState([])
 
 	{/* Hook: useEffect */ }
 	useEffect(() => {
@@ -98,6 +99,24 @@ function App() {
 
 			{/* Modificación de la variable de estado mediante la función de actualización */ }
 			setIndicators(indicatorsElements)
+
+			let arrayTiempos = Array.from(xml.getElementsByTagName("time")).map((elemento) => {
+
+				let fromTime = elemento.getAttribute("from")?.split("T") ?? "";
+				let día = fromTime[0].split("-")[2]
+				let hora = fromTime[1].split(":").slice(0, 2).join(":")
+				let rangeHours = día + " - " + hora
+
+				let temperatura = (parseFloat(elemento.getElementsByTagName("temperature")[0].getAttribute("value") ?? "") - 273.15).toFixed(1)
+
+				let sensación = (parseFloat(elemento.getElementsByTagName("feels_like")[0].getAttribute("value") ?? "") - 273.15).toFixed(1)
+
+				let humedad = elemento.getElementsByTagName("humidity")[0].getAttribute("value")
+
+				return { "horas": rangeHours, "temperatura": temperatura, "sensación": sensación, "humedad": humedad}
+			})
+			arrayTiempos = arrayTiempos.slice(0,15)
+			setVariables(arrayTiempos)
 
 			{/* 
                  2. Procese los resultados de acuerdo con el diseño anterior.
@@ -179,7 +198,7 @@ function App() {
 					</Grid>
 					<Grid xs={12}>
 						<Paper sx={{ padding: 0, height: "500px", display: 'flex', flexDirection: 'column' }}>
-							<WeatherChart value={tunnel}></WeatherChart>
+							<WeatherChart value={tunnel} variables={variables}></WeatherChart>
 						</Paper>
 					</Grid>
 				</Grid>
