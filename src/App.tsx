@@ -116,6 +116,7 @@ function App() {
 				return { "horas": rangeHours, "temperatura": temperatura, "sensación": sensación, "humedad": humedad}
 			})
 			arrayTiempos = arrayTiempos.slice(0,15)
+			// @ts-ignore
 			setVariables(arrayTiempos)
 
 			{/* 
@@ -198,6 +199,7 @@ function App() {
 					</Grid>
 					<Grid xs={12}>
 						<Paper sx={{ padding: 0, height: "500px", display: 'flex', flexDirection: 'column' }}>
+							{/*@ts-ignore*/}
 							<WeatherChart value={tunnel} variables={variables}></WeatherChart>
 						</Paper>
 					</Grid>

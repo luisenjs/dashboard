@@ -24,6 +24,7 @@ export default function WeatherChart(info: Config) {
     
     info.variables.forEach((datos) => {
         let lista = [datos["horas"], parseFloat(datos["temperatura"]), parseFloat(datos["sensación"]), parseInt(datos["humedad"])]
+        // @ts-ignore
         data.push(lista)
     })
 
