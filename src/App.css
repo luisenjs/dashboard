@@ -1,9 +1,15 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  margin: 0;
+  padding: 1% 5%;
   text-align: center;
-  background-color: #f0f0f0;
+  background: linear-gradient(to bottom, 
+    #e2f4ff 0%,
+    #a5d8f3 43%,
+    #70b5d1 66%,
+    #3298b4 80%,
+    #206f85 100% 
+    );
 }
 
 .logo {

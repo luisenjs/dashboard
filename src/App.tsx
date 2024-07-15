@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useState } from 'react'
-import { Paper, Typography } from '@mui/material';
+import { MenuItem, Paper, Select, Typography, SelectChangeEvent } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import Indicator from './components/Indicator';
 import BasicTable from './components/BasicTable';
@@ -19,9 +19,16 @@ interface Row {
 function App() {
 
 	{/* Variable de estado y función de actualización */ }
+	const [tunnel, setTunnel] = useState("")
+	const [ciudad, setCiudad] = useState("Guayaquil")
 	let [rowsTable, setRowsTable] = useState<Row[]>([])
 	let [indicators, setIndicators] = useState<ReactNode[]>([])
 	let [variables, setVariables] = useState([])
+	
+	debugger
+	const handleCityChange = (event: SelectChangeEvent<string>) => {
+		setCiudad(event.target.value);
+	};
 
 	{/* Hook: useEffect */ }
 	useEffect(() => {
@@ -40,7 +47,7 @@ function App() {
 
 				{/* Request */ }
 				let API_KEY = "f3e21294613e1afd54db89981ed8dbd1"
-				let response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=Guayaquil&mode=xml&appid=${API_KEY}`)
+				let response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${ciudad}&mode=xml&appid=${API_KEY}`)
 				savedTextXML = await response.text();
 
 				{/* Diferencia de tiempo */ }
@@ -82,15 +89,15 @@ function App() {
 			let vientoD = xml.getElementsByTagName("windDirection")[0]
 			let direcciónViento = vientoD.getAttribute("deg") + "° " + vientoD.getAttribute("name")
 
-			let sol = xml.getElementsByTagName("sun")[0]
+			/*let sol = xml.getElementsByTagName("sun")[0]
 			let amanecer = sol.getAttribute("rise")?.split("T")[1]
-			let atardecer = sol.getAttribute("set")?.split("T")[1]
+			DATOS ERRÓNEOS*/
 
 			dataToIndicators.push(["Temperatura", relaciónTemperatura, temperaturaAhora])
 			dataToIndicators.push(["Sensación", "La humedad lo hace sentir así", sensación])
-			dataToIndicators.push(["Precipitacitación", "Probabilidad de lluvia", precipitación])
+			dataToIndicators.push(["Precipitación", "Probabilidad de lluvia", precipitación])
 			dataToIndicators.push(["Viento", velocidadViento, direcciónViento])
-			dataToIndicators.push(["Datos del sol", atardecer, amanecer])
+			dataToIndicators.push(["Datos del sol", "Amanecer", "06:25:00"])//CONFIGURADO MANUAL, DATOS ERRÓNEOS
 
 			{/* Renderice el arreglo de resultados en un arreglo de elementos Indicator */ }
 			let indicatorsElements = Array.from(dataToIndicators).map(
@@ -113,9 +120,9 @@ function App() {
 
 				let humedad = elemento.getElementsByTagName("humidity")[0].getAttribute("value")
 
-				return { "horas": rangeHours, "temperatura": temperatura, "sensación": sensación, "humedad": humedad}
+				return { "horas": rangeHours, "temperatura": temperatura, "sensación": sensación, "humedad": humedad }
 			})
-			arrayTiempos = arrayTiempos.slice(0,15)
+			arrayTiempos = arrayTiempos.slice(0, 15)
 			// @ts-ignore
 			setVariables(arrayTiempos)
 
@@ -138,7 +145,7 @@ function App() {
 				let presión = timeElement.getElementsByTagName("pressure")[0].getAttribute("value") + " " + timeElement.getElementsByTagName("pressure")[0].getAttribute("unit")
 
 				let rawprecipitación = parseFloat(timeElement.getElementsByTagName("precipitation")[0].getAttribute("probability") ?? "") * 100
-				let precipitación = rawprecipitación.toString() + "%"
+				let precipitación = rawprecipitación.toFixed(1).toString() + "%"
 
 				return { "rangeHours": rangeHours, "visibility": visibilidad, "windDirection": windDirection, "windSpeed": windSpeed, "pressure": presión, "precipitation": precipitación }
 			})
@@ -148,77 +155,83 @@ function App() {
 			setRowsTable(arrayObjects)
 
 		})()
-	}, [])
+	}, [ciudad])
 
-	const [tunnel, setTunnel] = useState("")
 
 	return (
 		<>
-			<Grid container spacing={2} >
-				{/* Ciudad */}
-				<Grid xs={12}>
+			{/* Ciudad */}
+			<Grid xs={12} sx={{ padding: 5, display: "flex", flexDirection: "row", justifyContent:"space-between" }}>
+				<Grid lg={9}>
 					<Typography variant="h3" color={'black'}>
-						CIUDAD
+						Información de {ciudad}
 					</Typography>
 				</Grid>
+				<Grid lg={3}>
+					<Select value={ciudad} onChange={handleCityChange} sx={{border:"3px solid #549FFF"}}>
+						<MenuItem value="Guayaquil">Guayaquil</MenuItem>
+						<MenuItem value="Quito">Quito</MenuItem>
+						<MenuItem value="Cuenca">Cuenca</MenuItem>
+					</Select>
+				</Grid>
+			</Grid>
 
-				{/*Indicadores */}
+			{/*Indicadores */}
+			<Grid container xs={12} spacing={2} sx={{ padding: 2 }}>
+				<Grid xs={6} lg={2}>
+					<Paper sx={{ height: '170px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[0]}</Paper>
+				</Grid>
+				<Grid xs={6} lg={3}>
+					<Paper sx={{ height: '170px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[1]}</Paper>
+				</Grid>
+				<Grid xs={12} lg={2}>
+					<Paper sx={{ height: '170px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[2]}</Paper>
+				</Grid>
+				<Grid xs={6} lg={3}>
+					<Paper sx={{ height: '170px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[3]}</Paper>
+				</Grid>
+				<Grid xs={6} lg={2}>
+					<Paper sx={{ height: '170px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[4]}</Paper>
+				</Grid>
+			</Grid>
+
+			{/*Gráfico*/}
+			<Grid container xs={12} spacing={1} sx={{ padding: 2 }}>
 				<Grid container xs={12} spacing={2}>
-					<Grid xs={6} lg={2}>
-						<Paper sx={{ height: '150px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[0]}</Paper>
-					</Grid>
-					<Grid xs={6} lg={3}>
-						<Paper sx={{ height: '150px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[1]}</Paper>
-					</Grid>
-					<Grid xs={12} lg={2}>
-						<Paper sx={{ height: '150px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[2]}</Paper>
-					</Grid>
-					<Grid xs={6} lg={3}>
-						<Paper sx={{ height: '150px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[3]}</Paper>
-					</Grid>
-					<Grid xs={6} lg={2}>
-						<Paper sx={{ height: '150px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>{indicators[4]}</Paper>
-					</Grid>
-				</Grid>
-
-				{/*Gráfico*/}
-				<Grid container xs={12} spacing={1}>
-					<Grid container xs={12} spacing={2}>
-						<Paper sx={{ margin: 1, padding: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }}>
-							<Grid container spacing={2} sx={{ width: '100%' }}>
-								<Grid xs={12} lg={9} sx={{ display: 'flex', alignItems: 'center' }}>
-									<Typography variant="h4" color={'black'} sx={{ textAlign: 'left' }}>
-										Gráfico meteorológico
-									</Typography>
-								</Grid>
-								<Grid xs={12} lg={3}>
-									<ControlPanel valoresperado={setTunnel} />
-								</Grid>
+					<Paper sx={{ margin: 1, padding: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', backgroundColor: "#70BCFF" }}>
+						<Grid container spacing={2} sx={{ width: '100%' }}>
+							<Grid xs={12} lg={9} sx={{ display: 'flex', alignItems: 'center' }}>
+								<Typography variant="h4" color={'black'} sx={{ textAlign: 'left' }}>
+									Gráfico meteorológico
+								</Typography>
 							</Grid>
-						</Paper>
-					</Grid>
-					<Grid xs={12}>
-						<Paper sx={{ padding: 0, height: "500px", display: 'flex', flexDirection: 'column' }}>
-							{/*@ts-ignore*/}
-							<WeatherChart value={tunnel} variables={variables}></WeatherChart>
-						</Paper>
-					</Grid>
+							<Grid xs={12} lg={3}>
+								<ControlPanel valoresperado={setTunnel} />
+							</Grid>
+						</Grid>
+					</Paper>
 				</Grid>
+				<Grid xs={12}>
+					<Paper sx={{ padding: 0, height: "500px", display: 'flex', flexDirection: 'column' }}>
+						{/*@ts-ignore*/}
+						<WeatherChart value={tunnel} variables={variables}></WeatherChart>
+					</Paper>
+				</Grid>
+			</Grid>
 
-				{/* Tabla */}
-				<Grid container xs={12} spacing={1}>
-					<Grid xs={12}>
-						<Paper sx={{ padding: 2 }}>
-							<Typography variant="h4" color={'black'} sx={{ textAlign: 'center' }}>
-								Tabla informativa
-							</Typography>
-						</Paper>
-					</Grid>
-					<Grid xs={12}>
-						<Paper sx={{ padding: 2 }}>
-							<BasicTable rows={rowsTable}></BasicTable>
-						</Paper>
-					</Grid>
+			{/* Tabla */}
+			<Grid container xs={12} spacing={1} sx={{ padding: 2 }}>
+				<Grid xs={12}>
+					<Paper sx={{ padding: 2, backgroundColor: "#70BCFF" }}>
+						<Typography variant="h4" color={'black'} sx={{ textAlign: 'center' }}>
+							Tabla informativa
+						</Typography>
+					</Paper>
+				</Grid>
+				<Grid xs={12}>
+					<Paper sx={{ padding: 2 }}>
+						<BasicTable rows={rowsTable}></BasicTable>
+					</Paper>
 				</Grid>
 			</Grid>
 		</>
