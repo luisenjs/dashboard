@@ -51,8 +51,8 @@ function App() {
 				savedTextXML = await response.text();
 
 				{/* Diferencia de tiempo */ }
-				let hours = 1
-				let delay = hours * 3600000
+				let seconds = 2
+				let delay = seconds * 1000
 
 				{/* En el LocalStorage, almacena texto en la clave openWeatherMap y la estampa de tiempo de expiración */ }
 				localStorage.setItem("openWeatherMap", savedTextXML)
