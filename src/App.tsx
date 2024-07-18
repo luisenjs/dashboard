@@ -5,6 +5,7 @@ import Indicator from './components/Indicator';
 import BasicTable from './components/BasicTable';
 import WeatherChart from './components/WeatherChart';
 import ControlPanel from './components/ControlPanel';
+import Navbar from './components/Navbar';
 import './App.css'
 
 interface Row {
@@ -24,8 +25,7 @@ function App() {
 	let [rowsTable, setRowsTable] = useState<Row[]>([])
 	let [indicators, setIndicators] = useState<ReactNode[]>([])
 	let [variables, setVariables] = useState([])
-	
-	debugger
+
 	const handleCityChange = (event: SelectChangeEvent<string>) => {
 		setCiudad(event.target.value);
 	};
@@ -51,7 +51,7 @@ function App() {
 				savedTextXML = await response.text();
 
 				{/* Diferencia de tiempo */ }
-				let seconds = 2
+				let seconds = 3
 				let delay = seconds * 1000
 
 				{/* En el LocalStorage, almacena texto en la clave openWeatherMap y la estampa de tiempo de expiración */ }
@@ -71,8 +71,6 @@ function App() {
 				en el arreglo de resultados
 			*/}
 
-			//let ciudad = xml.getElementsByTagName("name")
-
 			let temperatura = xml.getElementsByTagName("temperature")[0]
 			let temperaturaAhora = (parseFloat(temperatura.getAttribute("value") ?? "") - 273.15).toFixed(1)
 			let temperaturaMin = (parseFloat(temperatura.getAttribute("min") ?? "") - 273.15).toFixed(1)
@@ -82,7 +80,7 @@ function App() {
 			let sensación = (parseFloat(xml.getElementsByTagName("feels_like")[0].getAttribute("value") ?? "") - 273.15).toFixed(1)
 
 			let rawprecipitación = parseFloat(xml.getElementsByTagName("precipitation")[0].getAttribute("probability") ?? "") * 100
-			let precipitación = rawprecipitación.toString() + "%"
+			let precipitación = rawprecipitación.toFixed(1).toString() + "%"
 
 			let vientoV = xml.getElementsByTagName("windSpeed")[0]
 			let velocidadViento = vientoV.getAttribute("mps") + " " + vientoV.getAttribute("unit")
@@ -97,7 +95,7 @@ function App() {
 			dataToIndicators.push(["Sensación", "La humedad lo hace sentir así", sensación])
 			dataToIndicators.push(["Precipitación", "Probabilidad de lluvia", precipitación])
 			dataToIndicators.push(["Viento", velocidadViento, direcciónViento])
-			dataToIndicators.push(["Datos del sol", "Amanecer", "06:25:00"])//CONFIGURADO MANUAL, DATOS ERRÓNEOS
+			dataToIndicators.push(["Dato del sol", "Amanecer", "06:25:00"])//CONFIGURADO MANUAL, DATOS ERRÓNEOS
 
 			{/* Renderice el arreglo de resultados en un arreglo de elementos Indicator */ }
 			let indicatorsElements = Array.from(dataToIndicators).map(
@@ -112,7 +110,7 @@ function App() {
 				let fromTime = elemento.getAttribute("from")?.split("T") ?? "";
 				let día = fromTime[0].split("-")[2]
 				let hora = fromTime[1].split(":").slice(0, 2).join(":")
-				let rangeHours = día + " - " + hora
+				let rangeHours = "D" + día + " - " + hora
 
 				let temperatura = (parseFloat(elemento.getElementsByTagName("temperature")[0].getAttribute("value") ?? "") - 273.15).toFixed(1)
 
@@ -134,7 +132,7 @@ function App() {
 				let fromTime = timeElement.getAttribute("from")?.split("T") ?? "";
 				let día = fromTime[0].split("-")[2]
 				let hora = fromTime[1].split(":").slice(0, 2).join(":")
-				let rangeHours = día + " - " + hora
+				let rangeHours = "D" + día + " - " + hora
 
 				let visibilidad = timeElement.getElementsByTagName("visibility")[0].getAttribute("value") ?? ""
 
@@ -160,18 +158,25 @@ function App() {
 
 	return (
 		<>
+			<Navbar />
 			{/* Ciudad */}
-			<Grid xs={12} sx={{ padding: 5, display: "flex", flexDirection: "row", justifyContent:"space-between" }}>
+			<Grid xs={12} sx={{ padding: 5, display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
 				<Grid lg={9}>
-					<Typography variant="h3" color={'black'}>
-						Información de {ciudad}
+					<Typography variant="h3" color={'black'} sx={{ fontFamily: "Playwrite CU, cursive" }}>
+						Información de {decodeURIComponent(ciudad)}
 					</Typography>
 				</Grid>
 				<Grid lg={3}>
-					<Select value={ciudad} onChange={handleCityChange} sx={{border:"3px solid #549FFF"}}>
+					<Select value={ciudad} onChange={handleCityChange} sx={{ width: 200, border: "3px solid #549FFF", borderRadius: "50px" }}>
 						<MenuItem value="Guayaquil">Guayaquil</MenuItem>
+						<MenuItem value="Santa%20Elena">Santa Elena</MenuItem>
 						<MenuItem value="Quito">Quito</MenuItem>
+						<MenuItem value="Latacunga">Latacunga</MenuItem>
 						<MenuItem value="Cuenca">Cuenca</MenuItem>
+						<MenuItem value="Azogues">Azogues</MenuItem>
+						<MenuItem value="Tena">Tena</MenuItem>
+						<MenuItem value="Gualaceo">Gualaceo</MenuItem>
+						<MenuItem value="La%20Libertad">La Libertad</MenuItem>
 					</Select>
 				</Grid>
 			</Grid>
@@ -201,8 +206,8 @@ function App() {
 					<Paper sx={{ margin: 1, padding: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', backgroundColor: "#70BCFF" }}>
 						<Grid container spacing={2} sx={{ width: '100%' }}>
 							<Grid xs={12} lg={9} sx={{ display: 'flex', alignItems: 'center' }}>
-								<Typography variant="h4" color={'black'} sx={{ textAlign: 'left' }}>
-									Gráfico meteorológico
+								<Typography variant="h4" color={'black'} sx={{ textAlign: 'left', fontFamily: "Playwrite AU SA, cursive" }}>
+									Gráfico de variables meteorológicas
 								</Typography>
 							</Grid>
 							<Grid xs={12} lg={3}>
@@ -223,7 +228,7 @@ function App() {
 			<Grid container xs={12} spacing={1} sx={{ padding: 2 }}>
 				<Grid xs={12}>
 					<Paper sx={{ padding: 2, backgroundColor: "#70BCFF" }}>
-						<Typography variant="h4" color={'black'} sx={{ textAlign: 'center' }}>
+						<Typography variant="h4" color={'black'} sx={{ textAlign: 'center', fontFamily: "Playwrite AU SA, cursive" }}>
 							Tabla informativa
 						</Typography>
 					</Paper>

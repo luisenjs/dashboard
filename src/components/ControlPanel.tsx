@@ -38,13 +38,13 @@ export default function ControlPanel({ valoresperado }: any) {
     {/* JSX */ }
 
     return (
-        <Box sx={{ minWidth: 120, backgroundColor:"#E5F8FF"}}>
+        <Box sx={{ minWidth: 120, backgroundColor:"#E5F8FF", borderRadius: "50px"}}>
 
             <FormControl fullWidth>
 
                 <InputLabel id="simple-select-label">Variables</InputLabel>
 
-                <Select labelId="simple-select-label" id="simple-select" label="Variables" defaultValue='-1' onChange={handleChange} sx={{border:"3px solid #549FFF"}}>
+                <Select labelId="simple-select-label" id="simple-select" label="Variables" defaultValue='-1' onChange={handleChange} sx={{border:"3px solid #549FFF", borderRadius: "50px"}}>
                     <MenuItem key="-1" value="-1" disabled>Seleccione una variable</MenuItem>
                     {options}
                 </Select>
