@@ -162,7 +162,7 @@ function App() {
 			{/* Ciudad */}
 			<Grid xs={12} sx={{ padding: 5, display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
 				<Grid lg={9}>
-					<Typography variant="h3" color={'black'} sx={{ fontFamily: "Playwrite CU, cursive" }}>
+					<Typography variant="h3" color={'black'} sx={{ fontFamily: "Playwrite NO, cursive", fontSize: "38px" }}>
 						Información de {decodeURIComponent(ciudad)}
 					</Typography>
 				</Grid>
@@ -206,7 +206,7 @@ function App() {
 					<Paper sx={{ margin: 1, padding: 2, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%', backgroundColor: "#70BCFF" }}>
 						<Grid container spacing={2} sx={{ width: '100%' }}>
 							<Grid xs={12} lg={9} sx={{ display: 'flex', alignItems: 'center' }}>
-								<Typography variant="h4" color={'black'} sx={{ textAlign: 'left', fontFamily: "Playwrite AU SA, cursive" }}>
+								<Typography variant="h4" color={'black'} sx={{ textAlign: 'left', fontFamily: "Playwrite AU SA, cursive", fontSize: "28px" }}>
 									Gráfico de variables meteorológicas
 								</Typography>
 							</Grid>
@@ -228,7 +228,7 @@ function App() {
 			<Grid container xs={12} spacing={1} sx={{ padding: 2 }}>
 				<Grid xs={12}>
 					<Paper sx={{ padding: 2, backgroundColor: "#70BCFF" }}>
-						<Typography variant="h4" color={'black'} sx={{ textAlign: 'center', fontFamily: "Playwrite AU SA, cursive" }}>
+						<Typography variant="h4" color={'black'} sx={{ textAlign: 'center', fontFamily: "Playwrite AU SA, cursive", fontSize: "28px" }}>
 							Tabla informativa
 						</Typography>
 					</Paper>

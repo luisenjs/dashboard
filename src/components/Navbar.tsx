@@ -15,7 +15,7 @@ export default function Navbar() {
             <AppBar position="fixed">
                 <Toolbar>
                     <img src={Icono} alt="Icono climático" style={{ width: '100px', height: '100px' }} />
-                    <Typography variant="h2" sx={{ flexGrow: 1, padding: 3, textAlign: "left", fontFamily: "Playwrite IT Moderna, cursive" }}>
+                    <Typography variant="h3" sx={{ flexGrow: 1, padding: 3, textAlign: "left", fontFamily: "Playwrite IT Moderna, cursive", fontSize: "42px"}}>
                         Dashboard meteorológico
                     </Typography>
                     <Grid sx={{ padding: 1 }}>
